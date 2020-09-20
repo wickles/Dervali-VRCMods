@@ -3,8 +3,8 @@ using MelonLoader;
 using UnityEngine;
 
 
-[assembly: MelonModInfo(typeof(NearClipPlaneAdj.NearClipPlaneAdjMod), "NearClipPlaneAdj", "1.1", "Nirvash")]
-[assembly: MelonModGame("VRChat", "VRChat")]
+[assembly: MelonInfo(typeof(NearClipPlaneAdj.NearClipPlaneAdjMod), "NearClipPlaneAdj", "1.3.1", "Nirvash")]
+[assembly: MelonGame("VRChat", "VRChat")]
 
 namespace NearClipPlaneAdj
 {
@@ -16,7 +16,7 @@ namespace NearClipPlaneAdj
             ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.SettingsMenu, "Nearplane-0.01", (() => ChangeNearClipPlane(.01f)));
             ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.SettingsMenu, "Nearplane-0.001", (() => ChangeNearClipPlane(.001f)));
             ExpansionKitApi.RegisterSimpleMenuButton(ExpandedMenu.SettingsMenu, "Nearplane-0.0001", (() => ChangeNearClipPlane(.0001f)));
-            MelonModLogger.Log("Near Plane Adjust Init");
+            MelonLogger.Log("Near Plane Adjust Init");
         }
 
         private void ChangeNearClipPlane(float value)
@@ -27,44 +27,31 @@ namespace NearClipPlaneAdj
             Camera screenCamera = vrCamera.screenCamera;
             if (!screenCamera)
                 return;
+            MelonLogger.Log("Near plane previous: " + screenCamera.nearClipPlane);
             screenCamera.nearClipPlane = value;
-            MelonModLogger.Log("Near plane adjusted: " + value);
+            MelonLogger.Log("Near plane adjusted: " + value);
         }
 
         public override void OnLevelWasLoaded(int level)
-        { //Return the clipping distance to a safe, close value on load
-            switch (level)
+        {
+            //Return the clipping distance to a safe, close value on load
+            switch(level)//Without switch this would run 3 times at world load
             {
                 case 0: //App
                 case 1: //ui
                     break;
                 default:
-                    MelonCoroutines.Start(setNearClipPlane(30, 0.01f));
+                    MelonCoroutines.Start(SetNearClipPlane(0.01f));
                     break;
-
             }
         }
 
-        System.Collections.IEnumerator setNearClipPlane(int secs, float nc)
+        System.Collections.IEnumerator SetNearClipPlane(float znear)
         {
-            MelonModLogger.Log("Near plane adjusted: " + nc + " for " + secs + " after world load");
-            while (secs > 0)
-            {
-                yield return new WaitForSecondsRealtime(1);
-                VRCVrCamera vrCamera = VRCVrCamera.field_Private_Static_VRCVrCamera_0;
-                if (!vrCamera)
-                    yield break;
-                Camera screenCamera = vrCamera.screenCamera;
-                if (!screenCamera)
-                    yield break;
-                screenCamera.nearClipPlane = nc;
-                
-                secs--;
-            }
-
+            yield return new WaitForSecondsRealtime(15); //Wait 15 seconds after world load before setting the clipping value. Waiting for the next/first frame does not work
+            ChangeNearClipPlane(znear);
+            MelonLogger.Log("Near plane adjusted after world load");
         }
-
-
 
     }
 }
