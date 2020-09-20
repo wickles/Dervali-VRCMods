@@ -20,4 +20,4 @@ Once you install the mod you should see three new options to the left of your Se
 I have not found any game breaking issues with using .0001 near plane distance, just some graphical artifacts in the distance, however .01 should always be safe to use as that is the normal minimum size Unity lets you use. 
 
 
-VRChat will set this back to default every world change. However, thanks to help from [forkbmb](https://github.com/forkbmb/nearclip) is mod will set the near plane clipping distance to .01 for 30 seconds every time you change a world.  (Reason why the 30 second period is that we can't know exactly when the world's referenceCamera's settings are copied onto the player's camera)
+VRChat will set this back to default every world change. However, thanks to help from [forkbmb](https://github.com/forkbmb/nearclip) is mod will set the near plane clipping distance to .01 15 seconds after you load into a world.  (Reason for the delay is that we can't know exactly when the world's referenceCamera's settings are copied onto the player's camera)
