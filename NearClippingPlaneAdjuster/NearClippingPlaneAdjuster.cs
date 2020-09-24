@@ -1,7 +1,7 @@
 ﻿using UIExpansionKit.API;
 using MelonLoader;
 using UnityEngine;
-
+using VRC.UserCamera;
 
 [assembly: MelonInfo(typeof(NearClipPlaneAdj.NearClipPlaneAdjMod), "NearClipPlaneAdj", "1.3.1", "Nirvash")]
 [assembly: MelonGame("VRChat", "VRChat")]
@@ -36,18 +36,11 @@ namespace NearClipPlaneAdj
         private void ChangePhotoCameraNearField(float value)
         {
             var cameraController = UserCameraController.field_Internal_Static_UserCameraController_0;
-
             if (cameraController == null)
-            {
                 return;
-            }
-
             Camera cam = cameraController.photoCamera.GetComponent<Camera>();
-
             if (cam != null)
-            {
                 cam.nearClipPlane = value;
-            }
         }
 
         public override void OnLevelWasLoaded(int level)
