@@ -30,12 +30,30 @@ namespace NearClipPlaneAdj
             MelonLogger.Log("Near plane previous: " + screenCamera.nearClipPlane);
             screenCamera.nearClipPlane = value;
             MelonLogger.Log("Near plane adjusted: " + value);
+            ChangePhotoCameraNearField(value);
+        }
+
+        private void ChangePhotoCameraNearField(float value)
+        {
+            var cameraController = UserCameraController.field_Internal_Static_UserCameraController_0;
+
+            if (cameraController == null)
+            {
+                return;
+            }
+
+            Camera cam = cameraController.photoCamera.GetComponent<Camera>();
+
+            if (cam != null)
+            {
+                cam.nearClipPlane = value;
+            }
         }
 
         public override void OnLevelWasLoaded(int level)
         {
             //Return the clipping distance to a safe, close value on load
-            switch(level)//Without switch this would run 3 times at world load
+            switch (level)//Without switch this would run 3 times at world load
             {
                 case 0: //App
                 case 1: //ui
